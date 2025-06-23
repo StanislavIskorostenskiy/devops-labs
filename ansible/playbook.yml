@@ -1,0 +1,9 @@
+- name: Настройка всех компонентов проекта
+  hosts: all
+  become: true
+
+  roles:
+    - postgres
+    - app
+    - nginx
+

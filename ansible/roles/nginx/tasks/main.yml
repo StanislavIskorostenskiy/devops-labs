@@ -1,0 +1,27 @@
+- name: Установка nginx
+  apt:
+    name: nginx
+    state: present
+    update_cache: true
+
+- name: Копирование конфигурации nginx
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/sites-available/{{ app_name }}
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Перезапустить nginx
+
+- name: Включение сайта
+  file:
+    src: /etc/nginx/sites-available/{{ app_name }}
+    dest: /etc/nginx/sites-enabled/{{ app_name }}
+    state: link
+    force: true
+
+- name: Удаление default-конфига (если есть)
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+

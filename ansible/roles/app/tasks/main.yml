@@ -1,0 +1,64 @@
+# Установка pip и venv
+- name: Установка зависимостей для Python
+  apt:
+    name:
+      - python3-pip
+      - python3-venv
+    state: present
+    update_cache: true
+
+# Создание папки /opt/myapp
+- name: Создание директории под приложение
+  file:
+    path: /opt/{{ app_name }}
+    state: directory
+
+# Копируем исходники Python-приложения (из папки ../app)
+- name: Копируем исходный код приложения
+  copy:
+    src: "{{ playbook_dir }}/../app/"
+    dest: /opt/{{ app_name }}
+    owner: root
+    group: root
+    mode: '0755'
+
+# Копируем requirements.txt (рядом с app/, в корне проекта)
+- name: Копируем requirements.txt
+  copy:
+    src: "{{ playbook_dir }}/../requirements.txt"
+    dest: /opt/{{ app_name }}/requirements.txt
+    owner: root
+    group: root
+    mode: '0644'
+
+# Создаём виртуальное окружение, если ещё нет
+- name: Создаём virtualenv
+  command: python3 -m venv /opt/{{ app_name }}/venv
+  args:
+    creates: /opt/{{ app_name }}/venv
+
+# Устанавливаем зависимости из requirements.txt
+- name: Устанавливаем зависимости
+  command: /opt/{{ app_name }}/venv/bin/pip install -r /opt/{{ app_name }}/requirements.txt
+
+# Генерируем .env файл из шаблона
+- name: Создание .env файла приложения
+  template:
+    src: .env.j2
+    dest: /opt/{{ app_name }}/.env
+    owner: root
+    group: root
+    mode: '0600'
+
+# Копируем systemd unit-файл из шаблона
+- name: Копируем systemd unit-файл приложения
+  template:
+    src: myapp.service.j2
+    dest: /etc/systemd/system/{{ app_name }}.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Перезапустить приложение
+
+

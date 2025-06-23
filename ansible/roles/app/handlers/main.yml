@@ -1,0 +1,6 @@
+- name: Перезапустить приложение
+  systemd:
+    name: "{{ app_name }}"         # имя сервиса
+    daemon_reload: yes             # перечитываем systemd
+    enabled: yes                   # включаем автозапуск
+    state: restarted               # перезапускаем сейчас

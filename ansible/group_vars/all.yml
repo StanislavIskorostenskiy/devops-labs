@@ -1,0 +1,10 @@
+postgres_user: myuser
+postgres_password: mysecurepassword
+postgres_db: myappdb
+postgres_port: 5432
+db_host: localhost
+
+# Настройки приложения
+app_name: myapp
+app_port: 8000
+

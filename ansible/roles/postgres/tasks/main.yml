@@ -1,0 +1,26 @@
+- name: Установка PostgreSQL
+  apt:
+    name: postgresql
+    state: present
+    update_cache: true
+
+- name: Установка зависимостей для PostgreSQL модулей
+  apt:
+    name:
+      - python3-psycopg2
+      - libpq-dev
+    state: present
+    update_cache: true
+
+- name: Настройка пароля для пользователя postgres
+  become_user: postgres
+  postgresql_user:
+    name: "{{ postgres_user }}"
+    password: "{{ postgres_password }}"
+    role_attr_flags: CREATEDB
+
+- name: Создание базы данных
+  become_user: postgres
+  postgresql_db:
+    name: "{{ postgres_db }}"
+    owner: "{{ postgres_user }}"
