@@ -13,9 +13,10 @@ jobs:
 
       - name: Debug ssh dir
         run: |
+         mkdir -p ~/.ssh
          ls -la ~/.ssh
          cat ~/.ssh/id_rsa | head -n 5
-         
+
       - name: Checkout code
         uses: actions/checkout@v4
   
