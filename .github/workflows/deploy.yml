@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: SSH-проверка подключения
+        run: ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa root@194.58.126.19 "echo '✅ SSH работает'"
+
       - name: Checkout code
         uses: actions/checkout@v4
   
