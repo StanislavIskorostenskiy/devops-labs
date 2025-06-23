@@ -1,4 +1,4 @@
-name: Deploy to Server
+name: Deploy via Ansible
 
 on:
   push:
@@ -11,28 +11,21 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Install Ansible
+      - name: Установить Ansible
         run: |
           sudo apt update
           sudo apt install -y ansible
 
-      - name: Setup SSH
-          sudo apt install -y ansible sshpass
-
-      - name: Setup SSH connection
+      - name: Создать SSH-ключ
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan 194.58.126.19 >> ~/.ssh/known_hosts
 
-      - name: Run Ansible Playbook
+      - name: Запустить Ansible Playbook
         run: |
-          ansible-playbook -i ansible/inventory.ini ansible/playbook.yml --private-key ~/.ssh/id_rsa
-          ansible-playbook -i ansible/inventory.ini ansible/playbook.yml \
-            --private-key ~/.ssh/id_rsa \
-            -u ${{ secrets.SSH_USER }} \
-            -e "ansible_ssh_common_args='-o StrictHostKeyChecking=no'"
-
+          cd ansible
+          ansible-playbook -i inventory.ini playbook.yml --private-key ~/.ssh/id_rsa
