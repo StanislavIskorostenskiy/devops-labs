@@ -26,12 +26,6 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan 194.58.126.19 >> ~/.ssh/known_hosts
 
-      - name: Debug ssh dir
-        run: |
-         mkdir -p ~/.ssh
-         ls -la ~/.ssh
-         cat ~/.ssh/id_rsa | head -n 5
-
       - name: Запустить Ansible Playbook
         run: |
           cd ansible
