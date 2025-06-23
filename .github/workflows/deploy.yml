@@ -10,10 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Checkout code
         uses: actions/checkout@v4
-  
+
       - name: Установить Ansible
         run: |
           sudo apt update
@@ -26,7 +25,11 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan 194.58.126.19 >> ~/.ssh/known_hosts
 
+      - name: SSH-проверка подключения (опционально)
+        run: ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa root@194.58.126.19 "echo '✅ SSH работает'"
+
       - name: Запустить Ansible Playbook
         run: |
           cd ansible
           ansible-playbook -i inventory.ini playbook.yml --private-key ~/.ssh/id_rsa
+
