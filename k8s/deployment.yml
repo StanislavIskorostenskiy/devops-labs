@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devopslab-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devopslab
+  template:
+    metadata:
+      labels:
+        app: devopslab
+    spec:
+      containers:
+      - name: devopslab-container
+        image: xmaoax/devops-labs:latest
+        ports:
+        - containerPort: 8000
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        env:
+        - name: POSTGRES_DB
+          value: mydb
+        - name: POSTGRES_USER
+          value: admin
+        - name: POSTGRES_PASSWORD
+          value: admin123
+        - name: POSTGRES_HOST
+          value: postgres
+        - name: POSTGRES_PORT_CLEAN
+          value: "5432"
